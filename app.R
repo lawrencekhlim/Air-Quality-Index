@@ -29,9 +29,10 @@ ui <- fluidPage(
       # Show a plot of the generated distribution
       mainPanel(
         
-        tabsetPanel(
+        tabsetPanel(id="tabs",
           tabPanel("Goleta", plotOutput("GoletaPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))), 
-          tabPanel("Santa Barbara", plotOutput("SBPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE )))
+          tabPanel("Santa Barbara", plotOutput("SBPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))),
+          tabPanel("Santa Maria", plotOutput("MariaPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE )))
         )
         
          
@@ -41,7 +42,8 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-   
+
+     
   output$GoletaPlot <- renderPlot({
       source("AQI.R")
     make_plot("Goleta")
@@ -52,6 +54,11 @@ server <- function(input, output) {
     make_plot("Santa Barbara")
   })
   
+  output$MariaPlot <- renderPlot({
+    source("AQI.R")
+    make_plot("Santa Maria")
+  })
+  
   
   output$details <- renderText({
     if(is.null(input$plot_hover$x)){
@@ -59,7 +66,9 @@ server <- function(input, output) {
     }
     else{
     
-      data <- get_data("Goleta")
+      city<-input$tabs
+      data <- get_data(city)
+      
       datetime <- as.POSIXct(input$plot_hover$x, origin = "1970-01-01")
       nearest_row <- data[which.min(abs(data$Date.Time - datetime)),]
       

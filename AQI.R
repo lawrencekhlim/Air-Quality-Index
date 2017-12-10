@@ -11,9 +11,14 @@ get_data <- function(city){
   if(identical(city, "Santa Barbara")){
     data <- read.csv("./lib/SantaBarbaraAQI.csv")
   }
-  else{
+  else if(identical(city, "Santa Maria")){
+    data <- read.csv("./lib/SantaMariaAQI.csv")
+  }
+  else if(identical(city, "Goleta")){
     data <- read.csv("./lib/AQI.csv")
   }
+  
+  
   time_format <- "%m/%d/%Y %I %p"
   
   data$Date.Time <- as.POSIXlt(data$Date.Time, format=time_format)
@@ -102,10 +107,13 @@ make_plot <- function(city){
     
     
     #the actual graph
-    geom_line(na.rm = TRUE, size = 1)+
     theme_minimal(base_size = 14) +
     labs(title=paste("Air Quality of", city, "During the Thomas Fires"), 
-         x="Date", y="AQI")
+         x="Date", y="AQI")+
+    
+  geom_line(na.rm = TRUE, size = 1)
+  
+  
   
   
   fire_start <- as.POSIXlt("2017-12-04 18:28")
@@ -123,14 +131,15 @@ make_plot <- function(city){
     data[which.min(abs(data$Date.Time - datetime)),]
   }
   
-  fire_plot <- fire_plot +
-    annotate("text", x=fire_start_label, y=-10, label="Fire Start", color="red")+
-    annotate("segment", x=fire_start, xend = fire_start, y=0, yend=get_closest_row(fire_start)$AQI, color="red")+
-  
-    annotate("rect", xmin = outage_start, xmax = outage_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
-    annotate("rect", xmin = outage2_start, xmax = outage2_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
-    annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  
-  
+  if(!identical(city, "Santa Maria")){
+    fire_plot <- fire_plot +
+      annotate("text", x=fire_start_label, y=-10, label="Fire Start", color="red")+
+      annotate("segment", x=fire_start, xend = fire_start, y=0, yend=get_closest_row(fire_start)$AQI, color="red")+
+    
+      annotate("rect", xmin = outage_start, xmax = outage_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
+      annotate("rect", xmin = outage2_start, xmax = outage2_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
+      annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  
+  }
   
   
   fire_plot
