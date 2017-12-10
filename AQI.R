@@ -8,7 +8,7 @@ library(ggplot2)
 
 
 get_data <- function(city){
-  if(identical(city, "santa barbara")){
+  if(identical(city, "Santa Barbara")){
     data <- read.csv("./lib/SantaBarbaraAQI.csv")
   }
   else{
@@ -75,13 +75,19 @@ make_plot <- function(city){
 
   data <- get_data(city)
   
+  if(identical(city,"Santa Barbara")){
+    max_AQI <- 600
+  }
+  else{
+    max_AQI <- 330
+  }
   
   
   fire_plot <- ggplot(data=data, aes(x=Date.Time, y=AQI)) + 
     
     
     #labeled color bars
-    geom_rect(aes(xmin=min(data$Date.Time), xmax=max(data$Date.Time), ymin=301, ymax=330,fill='Hazardous'), color=NA, alpha=0.01) +#hazardous
+    geom_rect(aes(xmin=min(data$Date.Time), xmax=max(data$Date.Time), ymin=301, ymax=max_AQI,fill='Hazardous'), color=NA, alpha=0.01) +#hazardous
     geom_rect(aes(xmin=min(data$Date.Time), xmax=max(data$Date.Time), ymin=201, ymax=300,fill="Very Unhealthy"), color=NA, alpha=0.01) +#very unhealthy
     geom_rect(aes(xmin=min(data$Date.Time), xmax=max(data$Date.Time), ymin=151, ymax=200,fill="Unhealthy"), color=NA, alpha=0.01) +#unhealthy
     geom_rect(aes(xmin=min(data$Date.Time), xmax=max(data$Date.Time), ymin=101, ymax=150,fill="Unhealthy for Sensitive Groups"), color=NA, alpha=0.01) +#USG
@@ -98,12 +104,12 @@ make_plot <- function(city){
     #the actual graph
     geom_line(na.rm = TRUE, size = 1)+
     theme_minimal(base_size = 14) +
-    labs(title="Goleta", 
+    labs(title=paste("Air Quality of", city, "During the Thomas Fires"), 
          x="Date", y="AQI")
   
   
   fire_start <- as.POSIXlt("2017-12-04 18:28")
-  fire_start_label <- as.POSIXlt("2017-12-04 10:28")
+  fire_start_label <- as.POSIXlt("2017-12-04 12:28")
   
   outage_start <- as.POSIXlt("2017-12-04 21:00")
   outage_end <- as.POSIXlt("2017-12-05 02:00")
@@ -118,12 +124,12 @@ make_plot <- function(city){
   }
   
   fire_plot <- fire_plot +
-    annotate("text", x=fire_start_label, y=get_closest_row(fire_start)$AQI, label="Fire Start", color="red")+
-    #annotate("segment", x=fire_start, xend = fire_start, y=90, yend=get_closest_row(fire_start)$AQI, color="red")+
+    annotate("text", x=fire_start_label, y=-10, label="Fire Start", color="red")+
+    annotate("segment", x=fire_start, xend = fire_start, y=0, yend=get_closest_row(fire_start)$AQI, color="red")+
   
     annotate("rect", xmin = outage_start, xmax = outage_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
     annotate("rect", xmin = outage2_start, xmax = outage2_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
-    annotate("text", x=outage_end, y=160, label="Power Outages", color="white")  
+    annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  
   
   
   

@@ -14,7 +14,7 @@ library(lubridate)
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Air Quality During the Thomas Fires"),
+   titlePanel("State of the Apocalypse"),
   
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -23,9 +23,18 @@ ui <- fluidPage(
        verbatimTextOutput("details")
      ),
      
+     
+     
+     
       # Show a plot of the generated distribution
       mainPanel(
-         plotOutput("distPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))
+        
+        tabsetPanel(
+          tabPanel("Goleta", plotOutput("GoletaPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))), 
+          tabPanel("Santa Barbara", plotOutput("SBPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE )))
+        )
+        
+         
       )
    )
 )
@@ -33,12 +42,14 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
    
-  output$distPlot <- renderPlot({
-   # if(!exists("make_plot", mode = "function")){
+  output$GoletaPlot <- renderPlot({
       source("AQI.R")
-   # }
-    
-    make_plot("goleta")
+    make_plot("Goleta")
+  })
+  
+  output$SBPlot <- renderPlot({
+    source("AQI.R")
+    make_plot("Santa Barbara")
   })
   
   
@@ -48,7 +59,7 @@ server <- function(input, output) {
     }
     else{
     
-      data <- get_data("goleta")
+      data <- get_data("Goleta")
       datetime <- as.POSIXct(input$plot_hover$x, origin = "1970-01-01")
       nearest_row <- data[which.min(abs(data$Date.Time - datetime)),]
       
@@ -71,7 +82,7 @@ server <- function(input, output) {
       
       
       
-      paste("AQI:", nearest_row[,8],
+      paste("AQI:", round(nearest_row[,8]),
             "\nDate:",date_to_string(nearest_row[,1]), 
             "\n", 
             "\nPM10:", nearest_row[,3], 
