@@ -1,5 +1,4 @@
 # Air-Quality-Index
-Graphs of the air quality in Goleta and Santa Barbara during the 2017 Thomas fires
 
 ### Authors: Lawrence Lim, Yash Rane
 
