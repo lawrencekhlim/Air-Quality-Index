@@ -14,7 +14,7 @@ library(lubridate)
 ui <- fluidPage(
    
    # Application title
-   titlePanel("State of the Apocalypse"),
+   titlePanel("Air Quality During the Thomas Fires"),
   
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -30,9 +30,9 @@ ui <- fluidPage(
       mainPanel(
         
         tabsetPanel(id="tabs",
-          tabPanel("Goleta", plotOutput("GoletaPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))), 
-          tabPanel("Santa Barbara", plotOutput("SBPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE ))),
-          tabPanel("Santa Maria", plotOutput("MariaPlot", hover=hoverOpts(id="plot_hover", delay=100, delayType = "debounce", nullOutside = FALSE )))
+          tabPanel("Goleta", plotOutput("GoletaPlot", click="plot_click")), 
+          tabPanel("Santa Barbara", plotOutput("SBPlot", click="plot_click")),
+          tabPanel("Santa Maria", plotOutput("MariaPlot", click="plot_click"))
         )
         
          
@@ -61,7 +61,7 @@ server <- function(input, output) {
   
   
   output$details <- renderText({
-    if(is.null(input$plot_hover$x)){
+    if(is.null(input$plot_click$x)){
       paste("N/A")
     }
     else{
@@ -69,7 +69,7 @@ server <- function(input, output) {
       city<-input$tabs
       data <- get_data(city)
       
-      datetime <- as.POSIXct(input$plot_hover$x, origin = "1970-01-01")
+      datetime <- as.POSIXct(input$plot_click$x, origin = "1970-01-01")
       nearest_row <- data[which.min(abs(data$Date.Time - datetime)),]
       
       parse_hour <- function(hour){

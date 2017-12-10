@@ -108,7 +108,7 @@ make_plot <- function(city){
     
     #the actual graph
     theme_minimal(base_size = 14) +
-    labs(title=paste("Air Quality of", city, "During the Thomas Fires"), 
+    labs(title=paste("AQI of", city), 
          x="Date", y="AQI")+
     
   geom_line(na.rm = TRUE, size = 1)
