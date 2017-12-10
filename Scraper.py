@@ -13,7 +13,7 @@ import csv
 
 def pull_new_data (place):
     page_source = get_page("https://das.sbcapcd.org/StationSummaryNew.aspx", place, 7)
-    table = parse_data (parse_source)
+    table = parse_data (page_source)
     return table
 
 def get_page (website, place, days):
@@ -30,7 +30,7 @@ def get_unmodified_page (website):
     WINDOW_SIZE = "1920,1080"
     
     chrome_options = Options()
-    #schrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
     #chrome_options.binary_location = CHROME_PATH
     
@@ -50,23 +50,24 @@ def select_time_option (driver, days):
     new_date = date.today()-timedelta(days=days-1, hours=5)
     waitfor = new_date.strftime("%m/%d/%Y")
     try:
-        WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, waitfor)))
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, waitfor)))
     except:
-        print "Could not find " + waitfor
+        pass
+        #print "Could not find '" + waitfor+"'"
 
 def select_place_option (driver, place):
     select = driver.find_element_by_name ("StationsSummaries1$SiteList")
     options = select.find_elements_by_tag_name("option")
     for option in options:
-        print "Value is: " + option.get_attribute("value")
-        if (place == option.get_attribute("value")):
+        #print "Value is: " + option.get_attribute("value")
+        if (place.replace (" ", "") in option.get_attribute("value")):
             option.click()
-
     waitfor = "Hourly Results for " + place
     try:
-        WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, waitfor)))
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, waitfor)))
     except:
-        print "Could not find " + waitfor
+        pass
+        #print "Could not find '" + waitfor+"'"
 
 
 def parse_data (page_source):
@@ -93,11 +94,16 @@ def parse_data (page_source):
 
 def read_data(filename):
     data = []
-    with open(filename, 'rb') as f:
-        reader = csv.reader(f, delimiter=',', quoting=csv.QUOTE_NONE)
-        for row in reader:
-            data.append (row)
+    try:
+        with open(filename, 'rb') as f:
+            reader = csv.reader(f, delimiter=',', quoting=csv.QUOTE_NONE)
+            for row in reader:
+                data.append (row)
+    except:
+        data.append (["Date/Time","Ozone(ppb)","PM10(ug/m3)","PM2.5(ug/m3)","Wind Speed(mph)",
+                      "Wind Direction(degrees)","Temperature (F)"])
     return data
+
 
 def merge_data (data_1, data_2):
     complete_data = data_1
@@ -106,22 +112,36 @@ def merge_data (data_1, data_2):
             complete_data.append (row)
     return complete_data
 
+
 def write_data (filename, data):
     with open(filename, 'wb') as f:
         writer = csv.writer(f)
         writer.writerows(data)
 
+
 def update_data (filename, place):
     
     new_data = pull_new_data(place)
-    print (new_data)
+    #print (new_data)
+    
     old_data = read_data(filename)
     complete_data = merge_data (old_data, new_data)
     write_data (filename, complete_data)
 
-place = "Santa Barbara"
-filename = "lib/AQI.csv"
-filename = "lib/SantaBarbaraAQI.csv"
-update_data(filename, place)
+path = "lib/"
+
+files = {}
+files ["Santa Barbara"] = path+"SantaBarbaraAQI.csv"
+files ["Goleta"] = path+"AQI.csv"
+#files ["Carpinteria"] = path+"CarpinteriaAQI.csv"
+files ["Santa Maria"] = path+"SantaMariaAQI.csv"
+
+places = []
+places.append("Goleta")
+places.append("Santa Barbara")
+places.append("Santa Maria")
+place = places[0]
+
+update_data(files [place], place)
 
 
