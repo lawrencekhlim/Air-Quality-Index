@@ -5,9 +5,9 @@ account: yash-rane
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 246729
-bundleId: 1125916
+bundleId: 1126597
 url: https://yash-rane.shinyapps.io/Air-Quality-Index/
-when: 1512895716.71416
+when: 1512938178.89381
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: README.md|Scraper.py
+ignoredFiles: README.md|Scraper.py|img/Goleta.png|img/Santa_Barbara.png|img/Santa_Maria.png

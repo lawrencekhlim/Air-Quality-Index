@@ -4,7 +4,7 @@ library(ggplot2)
 
 
 
-#setwd('C:/Users/yashr/Documents/Random Projects/Air-Quality-Index')
+#twd('C:/Users/yashr/Documents/Random Projects/Air-Quality-Index')
 
 
 get_data <- function(city){
@@ -80,11 +80,11 @@ make_plot <- function(city){
 
   data <- get_data(city)
   
-  if(identical(city,"Santa Barbara")){
-    max_AQI <- 600
+  if(identical(city,"Santa Maria")){
+    max_AQI <- 330
   }
   else{
-    max_AQI <- 330
+    max_AQI <- max(data$AQI[!is.na(data$AQI)]) + 50
   }
   
   
@@ -125,6 +125,8 @@ make_plot <- function(city){
   outage2_start <- as.POSIXlt("2017-12-05 08:00")
   outage2_end <- as.POSIXlt("2017-12-05 12:00")
   
+  outage3_start <- as.POSIXlt("2017-12-10 01:00")
+  outage3_end <- as.POSIXlt("2017-12-10 07:00")
   
   
   get_closest_row <- function(datetime){
@@ -138,7 +140,10 @@ make_plot <- function(city){
     
       annotate("rect", xmin = outage_start, xmax = outage_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
       annotate("rect", xmin = outage2_start, xmax = outage2_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
-      annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  
+      annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  +
+    
+      annotate("rect", xmin = outage3_start, xmax = outage3_end, ymin = 0, ymax = get_closest_row(outage3_end)$AQI,color="red",alpha = .2)+
+      annotate("text", x=outage3_start, y=-10, label="Power Outage", color="red")
   }
   
   
