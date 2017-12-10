@@ -7,10 +7,10 @@ Since the Thomas fire and numerous other fires in the Los Angeles-Ventura region
 
 
 ## Goleta
-![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/img/Goleta.png)
+![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/blob/master/img/Goleta.png)
 
 ## Santa Barbara
-![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/img/Santa_Barbara.png)
+![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/blob/master/img/Santa_Barbara.png)
 
 ## Santa Maria
-![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/img/Santa_Maria.png)
+![alt text](https://github.com/lawrencekhlim/Air-Quality-Index/blob/master/img/Santa_Maria.png)
