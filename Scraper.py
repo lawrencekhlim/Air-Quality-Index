@@ -1,3 +1,8 @@
+# Author: Lawrence Lim
+# 12/9/2017
+# Scraper.py
+# Updates data
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
@@ -140,7 +145,7 @@ places = []
 places.append("Goleta")
 places.append("Santa Barbara")
 places.append("Santa Maria")
-place = places[0]
+place = places[1]
 
 update_data(files [place], place)
 
