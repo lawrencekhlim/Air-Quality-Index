@@ -114,7 +114,11 @@ def merge_data (data_1, data_2):
     complete_data = data_1
     for row in data_2:
         if not row in complete_data:
+            for row2 in complete_data:
+                if row2[0] == row[0]:
+                    complete_data.remove (row2)
             complete_data.append (row)
+
     return complete_data
 
 
@@ -145,8 +149,8 @@ places = []
 places.append("Goleta")
 places.append("Santa Barbara")
 places.append("Santa Maria")
-place = places[1]
 
-update_data(files [place], place)
+for place in places:
+    update_data(files [place], place)
 
 
