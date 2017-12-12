@@ -4,7 +4,7 @@ library(ggplot2)
 
 
 
-#twd('C:/Users/yashr/Documents/Random Projects/Air-Quality-Index')
+#setwd('C:/Users/yashr/Documents/Random Projects/Air-Quality-Index')
 
 
 get_data <- function(city){
@@ -150,4 +150,20 @@ make_plot <- function(city){
   fire_plot
 }
 
+
+make_images <- function(){
+  
+  png("img/Goleta.png", width=1200, height=600)
+  plot(make_plot('Goleta'))
+  dev.off()
+  
+  png("img/Santa_Barbara.png", width=1200, height=600)
+  plot(make_plot('Santa Barbara'))
+  dev.off()  
+  
+  
+  png("img/Santa_Maria.png", width=1200, height=600)
+  plot(make_plot('Santa Maria'))
+  dev.off()
+}
 
