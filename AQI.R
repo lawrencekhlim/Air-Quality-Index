@@ -140,7 +140,7 @@ make_plot <- function(city){
     
       annotate("rect", xmin = outage_start, xmax = outage_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
       annotate("rect", xmin = outage2_start, xmax = outage2_end, ymin = 0, ymax = 145,color="red",alpha = .2)+
-      annotate("text", x=outage2_start, y=-10, label="Power Outages", color="red")  +
+      annotate("text", x=outage2_start, y=-25, label="Power Outages", color="red")  +
     
       annotate("rect", xmin = outage3_start, xmax = outage3_end, ymin = 0, ymax = get_closest_row(outage3_end)$AQI,color="red",alpha = .2)+
       annotate("text", x=outage3_start, y=-10, label="Power Outage", color="red")
